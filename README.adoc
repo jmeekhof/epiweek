@@ -1,3 +1,34 @@
 = Epiweek Calculator
 
 Simple week counter for weeks of the year. Often used in epidemiology. An epiweek is similar to an ISO week, except the epiwook starts on Sunday and ISO week begins on Monday.
+
+== Overview
+Epidemiological weeks are just a standardized way to count weeks in a year. It's a convenient grouping mechanism that allows for easy comparison in a year over year fashion.
+The CDC defines an epi week as seven days beginning on Sunday. The end of the week (Saturday for epi week, Sunday for ISO week) must land at least 4 days into the year. Another way to look at is, if the week is mostly in the new year, it goes with the new year.
+
+== Basic Usage
+[source,go]
+----
+package main
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/jmeekhof/epiweek"
+)
+
+func main() {
+	days := []epiweek.Epiweek{
+		{Time: time.Date(2019, 12, 31, 0, 0, 0, 0, time.UTC)},
+		{Time: time.Date(2020, 10, 15, 0, 0, 0, 0, time.UTC)},
+	}
+
+	for _, epi := range days {
+		year, week := epi.Epiweek()
+		fmt.Print("Year: ", year, " Week: ", week, "\n")
+	}
+}
+----
+
+
