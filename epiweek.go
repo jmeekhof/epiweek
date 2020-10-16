@@ -7,8 +7,11 @@ import (
 
 const (
 	secondsInDay = 24 * 60 * 60
+	daysInWeek   = 7
 )
 
+// Epiweek is initialized with Time and will allow easy operations for
+// calculating  CDC Epi weeks
 type Epiweek struct {
 	Time time.Time
 }
@@ -31,6 +34,13 @@ func (e Epiweek) Epiweek() (year, week int) {
 	wed := e.Time.Add(days * time.Second * secondsInDay)
 	year = wed.Year()
 	week = wed.YearDay()/7 + 1
+	return
+}
+
+// Add will add the week number of weeks to the e Epiweek
+func (e Epiweek) Add(week int) (epiweek Epiweek) {
+	epiweek.Time = e.Time.AddDate(0, 0, daysInWeek*week)
+
 	return
 }
 
