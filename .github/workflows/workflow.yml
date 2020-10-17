@@ -29,7 +29,12 @@ jobs:
 
     - name: Coverage
       run: |
-          "${GITHUB_WORKSPACE}/bin/bazel" coverage ... --test_strategy=standalone
+          "${GITHUB_WORKSPACE}/bin/bazel" coverage ... --test_strategy=standalone --test_arg -test.coverprofile=/tmp/cover.out --test_strategy=standalone
+
+    - name: Goveralls
+      uses: shogo82148/actions-goveralls@v1
+      with:
+        path-to-profile: /tmp/cover.out
 
     - name: Build
       run: |
