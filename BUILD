@@ -13,6 +13,7 @@ go_library(
 
 go_test(
     name = "epiweek_test",
+    size = "small",
     srcs = ["epiweek_test.go"],
     embed = [":epiweek"],
 )
