@@ -26,15 +26,17 @@ jobs:
     - name: Test
       run: |
         "${GITHUB_WORKSPACE}/bin/bazel" test //...
+        "${GITHUB_WORKSPACE}/bin/bazel" coverage ...
 
-    - name: Coverage
+    - name: Get Test Output
+      id: test_dir
       run: |
-          "${GITHUB_WORKSPACE}/bin/bazel" coverage ... --test_strategy=standalone --test_arg -test.coverprofile=/tmp/cover.out --test_strategy=standalone
+          echo "::set-output name=bazel_test_dir::$(${GITHUB_WORKSPACE}/bin/bazel info bazel-testlogs)"
 
     - name: Goveralls
       uses: shogo82148/actions-goveralls@v1
       with:
-        path-to-profile: /tmp/cover.out
+        path-to-profile: ${{ steps.test_dir.outputs.bazel_test_dir }}/epiweek_test/coverage.dat
 
     - name: Build
       run: |
