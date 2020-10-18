@@ -23,6 +23,10 @@ jobs:
         mv bazelisk-linux-amd64 "${GITHUB_WORKSPACE}/bin/bazel"
         chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
 
+    - name: Build
+      run: |
+        "${GITHUB_WORKSPACE}/bin/bazel" build //...
+
     - name: Test
       run: |
         "${GITHUB_WORKSPACE}/bin/bazel" test //...
@@ -37,7 +41,3 @@ jobs:
       uses: shogo82148/actions-goveralls@v1
       with:
         path-to-profile: ${{ steps.test_dir.outputs.bazel_test_dir }}/epiweek_test/coverage.dat
-
-    - name: Build
-      run: |
-        "${GITHUB_WORKSPACE}/bin/bazel" build //...
