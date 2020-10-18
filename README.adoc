@@ -1,11 +1,16 @@
-:CI-badge: https://github.com/jmeekhof/epiweek/workflows/CI/badge.svg
-:CI-link: https://github.com/jmeekhof/epiweek/actions?query=workflow%3ACI
-:GoDoc-badge: https://godoc.org/github.com/jmeekhof/epiweek?status.svg
-:GoDoc-link: https://pkg.go.dev/github.com/jmeekhof/epiweek
+:CI_badge: https://github.com/jmeekhof/epiweek/workflows/CI/badge.svg
+:CI_link: https://github.com/jmeekhof/epiweek/actions?query=workflow%3ACI
+:GoDoc_badge: https://godoc.org/github.com/jmeekhof/epiweek?status.svg
+:GoDoc_link: https://pkg.go.dev/github.com/jmeekhof/epiweek
+:Cover_badge: https://coveralls.io/repos/github/jmeekhof/epiweek/badge.svg?branch=main
+:Cover_link: https://coveralls.io/github/jmeekhof/epiweek?branch=main
+
+
 = Epiweek Calculator
 
-image:{CI-badge}["Build Status", link="{CI-link}"]
-image:{GoDoc-badge}[GoDoc Status", link="{GoDoc-link}"]
+image:{CI_badge}["Build Status", link="{CI_link}"]
+image:{GoDoc_badge}["GoDoc Status", link="{GoDoc_link}"]
+image:{Cover_badge}["Coverage Status", link="{Cover_link}"]
 
 Simple week counter for weeks of the year. Often used in epidemiology. An epiweek is similar to an ISO week, except the epiwook starts on Sunday and ISO week begins on Monday.
 
