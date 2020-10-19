@@ -1,6 +1,7 @@
 package epiweek
 
 import (
+	"reflect"
 	"testing"
 	"time"
 )
@@ -42,6 +43,29 @@ func TestEpiweek(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestEpiweekOneWeek(t *testing.T) {
+	startDate := time.Date(2020, 10, 18, 0, 0, 0, 0, time.UTC) // Sunday
+	epiWeeks := make([]expected, daysInWeek)
+	for days := 0; days < daysInWeek; days++ {
+		year, week := Epiweek{Time: startDate.AddDate(0, 0, days)}.Epiweek()
+		epiWeeks[days] = expected{year: year, week: week}
+	}
+	expectedValues := make([]expected, daysInWeek)
+
+	year, week := Epiweek{Time: startDate}.Epiweek()
+	e := expected{year: year, week: week}
+
+	for days := 0; days < daysInWeek; days++ {
+		expectedValues[days] = e
+	}
+
+	if !reflect.DeepEqual(epiWeeks, expectedValues) {
+		t.Errorf("Output: %#v", epiWeeks)
+		t.Errorf("Expected: %#v", expectedValues)
+	}
+
 }
 
 func TestAdd(t *testing.T) {
