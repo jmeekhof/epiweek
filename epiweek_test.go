@@ -1,6 +1,7 @@
 package epiweek
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -153,5 +154,13 @@ func TestDaysFromDay(t *testing.T) {
 			}
 		})
 	}
+}
 
+func TestString(t *testing.T) {
+	ep := Epiweek{Time: time.Date(2020, 10, 21, 0, 0, 0, 0, time.UTC)}
+	year, week := ep.Epiweek()
+	expected := fmt.Sprintf("Year [%d], Week [%d]", year, week)
+	if expected != ep.String() {
+		t.Errorf("String output does not match. Expected: %v, got: %s", expected, ep)
+	}
 }
