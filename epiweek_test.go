@@ -84,10 +84,50 @@ func TestAdd(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		e := tt.epiweek.Add(tt.add)
-		y, w := e.Epiweek()
-		if y != tt.want.year || w != tt.want.week {
-			t.Errorf("Wanted year: %d, Wanted week: %d\nGot year: %d, Got week: %d", tt.want.year, tt.want.week, y, w)
-		}
+		t.Run(tt.name, func(t *testing.T) {
+			e := tt.epiweek.Add(tt.add)
+			y, w := e.Epiweek()
+			if y != tt.want.year || w != tt.want.week {
+				t.Errorf("Wanted year: %d, Wanted week: %d\nGot year: %d, Got week: %d", tt.want.year, tt.want.week, y, w)
+			}
+		})
 	}
+}
+
+func TestDaysFromDay(t *testing.T) {
+	tests := []struct {
+		name string
+		day  time.Weekday
+		epi  Epiweek
+		want int
+	}{
+		{
+			name: "Same day of week",
+			day:  time.Sunday,
+			epi:  Epiweek{Time: time.Date(2020, 10, 18, 0, 0, 0, 0, time.UTC)},
+			want: 0,
+		},
+		{
+			name: "Sunday to next Saturday",
+			day:  time.Saturday,
+			epi:  Epiweek{Time: time.Date(2020, 10, 18, 0, 0, 0, 0, time.UTC)},
+			want: 6,
+		},
+		{
+			name: "Wednesday to Sunday",
+			day:  time.Sunday,
+			epi:  Epiweek{Time: time.Date(2020, 10, 21, 0, 0, 0, 0, time.UTC)},
+			want: -3,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			days := tt.epi.daysFromDay(tt.day)
+			if days != tt.want {
+				t.Errorf("Wanted: %d, got: %d.\nCalculated from epi: %#v and day: %#v", tt.want, days, tt.epi, tt.day)
+			}
+		})
+	}
+
 }
