@@ -33,3 +33,8 @@ jobs:
         uses: shogo82148/actions-goveralls@v1
         with:
           path-to-profile: ${{ steps.test_dir.outputs.bazel_test_dir }}/epiweek_test/coverage.dat
+      - name: Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ${{ steps.test_dir.outputs.bazel_test_dir }}/epiweek_test/coverage.dat
+          verbose: true
