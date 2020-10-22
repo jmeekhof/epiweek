@@ -24,7 +24,7 @@ jobs:
       - name: Test
         run: |
           "${GITHUB_WORKSPACE}/bin/bazel" test //...
-          "${GITHUB_WORKSPACE}/bin/bazel" coverage ...
+          "${GITHUB_WORKSPACE}/bin/bazel" coverage ... --test_arg=covermode=atomic
       - name: Get Test Output
         id: test_dir
         run: |

@@ -1,0 +1,4 @@
+---
+codecov:
+  ci:
+    - github actions
