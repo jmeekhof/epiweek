@@ -2,3 +2,4 @@
 codecov:
   ci:
     - github actions
+  disable_default_path_fixes: false
