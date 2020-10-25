@@ -9,15 +9,15 @@ import (
 func main() {
 	//e := epiweek.Epiweek{Time: time.Now()}
 	days := []epiweek.Epiweek{
-		{Time: date(2019, 12, 31)},
-		{Time: date(2020, 10, 15)},
-		{Time: date(2020, 10, 16)},
-		{Time: date(2020, 10, 17)},
-		{Time: date(2020, 10, 18)},
-		{Time: date(2020, 10, 19)},
-		{Time: date(2020, 10, 20)},
-		{Time: date(2020, 10, 21)},
-		{Time: date(2020, 10, 22)},
+		epiweek.NewEpiweek(date(2019, 12, 31)),
+		epiweek.NewEpiweek(date(2020, 10, 15)),
+		epiweek.NewEpiweek(date(2020, 10, 16)),
+		epiweek.NewEpiweek(date(2020, 10, 17)),
+		epiweek.NewEpiweek(date(2020, 10, 18)),
+		epiweek.NewEpiweek(date(2020, 10, 19)),
+		epiweek.NewEpiweek(date(2020, 10, 20)),
+		epiweek.NewEpiweek(date(2020, 10, 21)),
+		epiweek.NewEpiweek(date(2020, 10, 22)),
 	}
 	for _, e := range days {
 		fmt.Printf("Epiweek: %s\n", e)

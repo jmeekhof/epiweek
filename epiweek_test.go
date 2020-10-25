@@ -20,7 +20,7 @@ func TestEpiweek(t *testing.T) {
 	}{
 		{
 			name:    "Year starts on Wednesday",
-			epiweek: Epiweek{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)},
+			epiweek: NewEpiweek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
 			want: expected{
 				year: 2020,
 				week: 1,
@@ -28,7 +28,7 @@ func TestEpiweek(t *testing.T) {
 		},
 		{
 			name:    "Week start on Sunday",
-			epiweek: Epiweek{Time: time.Date(2019, 12, 1, 0, 0, 0, 0, time.UTC)},
+			epiweek: NewEpiweek(time.Date(2019, 12, 1, 0, 0, 0, 0, time.UTC)),
 			want: expected{
 				year: 2019,
 				week: 49,
@@ -50,12 +50,12 @@ func TestEpiweekOneWeek(t *testing.T) {
 	startDate := time.Date(2020, 10, 18, 0, 0, 0, 0, time.UTC) // Sunday
 	epiWeeks := make([]expected, daysInWeek)
 	for days := 0; days < daysInWeek; days++ {
-		year, week := Epiweek{Time: startDate.AddDate(0, 0, days)}.Epiweek()
+		year, week := NewEpiweek(startDate.AddDate(0, 0, days)).Epiweek()
 		epiWeeks[days] = expected{year: year, week: week}
 	}
 	expectedValues := make([]expected, daysInWeek)
 
-	year, week := Epiweek{Time: startDate}.Epiweek()
+	year, week := NewEpiweek(startDate).Epiweek()
 	e := expected{year: year, week: week}
 
 	for days := 0; days < daysInWeek; days++ {
@@ -78,31 +78,31 @@ func TestAdd(t *testing.T) {
 	}{
 		{
 			name:    "Add positive weeks",
-			epiweek: Epiweek{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)},
+			epiweek: NewEpiweek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
 			add:     2,
 			want:    expected{year: 2020, week: 3},
 		},
 		{
 			name:    "Add negative weeks",
-			epiweek: Epiweek{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)},
+			epiweek: NewEpiweek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
 			add:     -2,
 			want:    expected{year: 2019, week: 51},
 		},
 		{
 			name:    "Add weeks, cross year, 53 week year",
-			epiweek: Epiweek{Time: time.Date(2020, 12, 4, 0, 0, 0, 0, time.UTC)},
+			epiweek: NewEpiweek(time.Date(2020, 12, 4, 0, 0, 0, 0, time.UTC)),
 			add:     4,
 			want:    expected{year: 2020, week: 53},
 		},
 		{
 			name:    "Add weeks, cross year, 52 week year",
-			epiweek: Epiweek{Time: time.Date(2019, 12, 24, 0, 0, 0, 0, time.UTC)},
+			epiweek: NewEpiweek(time.Date(2019, 12, 24, 0, 0, 0, 0, time.UTC)),
 			add:     1,
 			want:    expected{year: 2020, week: 1},
 		},
 		{
 			name:    "Cross backwards into 53 year week",
-			epiweek: Epiweek{Time: time.Date(2021, 1, 3, 0, 0, 0, 0, time.UTC)},
+			epiweek: NewEpiweek(time.Date(2021, 1, 3, 0, 0, 0, 0, time.UTC)),
 			add:     -1,
 			want:    expected{year: 2020, week: 53},
 		},
@@ -123,25 +123,25 @@ func TestDaysFromDay(t *testing.T) {
 	tests := []struct {
 		name string
 		day  time.Weekday
-		epi  Epiweek
+		epi  myTime
 		want int
 	}{
 		{
 			name: "Same day of week",
 			day:  time.Sunday,
-			epi:  Epiweek{Time: time.Date(2020, 10, 18, 0, 0, 0, 0, time.UTC)},
+			epi:  myTime(time.Date(2020, 10, 18, 0, 0, 0, 0, time.UTC)),
 			want: 0,
 		},
 		{
 			name: "Sunday to next Saturday",
 			day:  time.Saturday,
-			epi:  Epiweek{Time: time.Date(2020, 10, 18, 0, 0, 0, 0, time.UTC)},
+			epi:  myTime(time.Date(2020, 10, 18, 0, 0, 0, 0, time.UTC)),
 			want: 6,
 		},
 		{
 			name: "Wednesday to Sunday",
 			day:  time.Sunday,
-			epi:  Epiweek{Time: time.Date(2020, 10, 21, 0, 0, 0, 0, time.UTC)},
+			epi:  myTime(time.Date(2020, 10, 21, 0, 0, 0, 0, time.UTC)),
 			want: -3,
 		},
 	}
@@ -157,7 +157,7 @@ func TestDaysFromDay(t *testing.T) {
 }
 
 func TestString(t *testing.T) {
-	ep := Epiweek{Time: time.Date(2020, 10, 21, 0, 0, 0, 0, time.UTC)}
+	ep := NewEpiweek(time.Date(2020, 10, 21, 0, 0, 0, 0, time.UTC))
 	year, week := ep.Epiweek()
 	expected := fmt.Sprintf("Year [%d], Week [%d]", year, week)
 	if expected != ep.String() {
