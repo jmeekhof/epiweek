@@ -19,7 +19,7 @@ func TestEpiweek(t *testing.T) {
 		want    expected
 	}{
 		{
-			name:    "Year starts on Wednesday",
+			name:    "Year starts on Wednesday, CDC MMNR",
 			epiweek: NewEpiweek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
 			want: expected{
 				year: 2020,
@@ -27,11 +27,19 @@ func TestEpiweek(t *testing.T) {
 			},
 		},
 		{
-			name:    "Week start on Sunday",
+			name:    "Week start on Sunday, CDC MMNR",
 			epiweek: NewEpiweek(time.Date(2019, 12, 1, 0, 0, 0, 0, time.UTC)),
 			want: expected{
 				year: 2019,
 				week: 49,
+			},
+		},
+		{
+			name:    "Year starts on Thursday, ISO Week",
+			epiweek: NewIsoWeek(time.Date(1998, 1, 1, 0, 0, 0, 0, time.UTC)),
+			want: expected{
+				year: 1998,
+				week: 1,
 			},
 		},
 	}
