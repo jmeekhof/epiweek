@@ -17,13 +17,6 @@ const (
 	isoweek
 )
 
-type myTime time.Time
-
-func (t myTime) daysFromDay(w time.Weekday) (days int) {
-	days = int(w - time.Time(t).Weekday())
-	return
-}
-
 // Epiweek is initialized with Time and will allow easy operations for
 // calculating  CDC Epi weeks
 type Epiweek struct {

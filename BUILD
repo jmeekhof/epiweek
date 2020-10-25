@@ -6,7 +6,10 @@ gazelle(name = "gazelle")
 
 go_library(
     name = "epiweek",
-    srcs = ["epiweek.go"],
+    srcs = [
+        "epiweek.go",
+        "mytime.go",
+    ],
     importpath = "github.com/jmeekhof/epiweek",
     visibility = ["//visibility:public"],
 )
