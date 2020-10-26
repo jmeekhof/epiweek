@@ -56,6 +56,16 @@ func NewIsoWeek(t time.Time) (e Epiweek) {
 	return
 }
 
+// FirstDateOfPeriod Returns the date of the first day of the epi week. Sunday
+// for CDC Epiweeks and Monday for ISO weeks
+func (e Epiweek) FirstDateOfPeriod() (firstDateOfPeriod time.Time) {
+	// Our factory functions (NewEpiweek and NewIsoWeek) put the date in our
+	// struct at the middle point of the week. We only need to subtract 3 days
+	// and return that time
+	firstDateOfPeriod = e.time.Add(-3 * time.Second * secondsInDay)
+	return
+}
+
 // Epiweek return the year and week number in which Time occurs. Weeks range
 // from 1 to 53. Jan 1 to Jan 3  of the year might belong to the prior year.
 // Likewise, Dec 29 to Dec 31 might belong to the next year.

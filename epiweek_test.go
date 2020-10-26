@@ -312,3 +312,43 @@ func TestInternalDayOfWeek(t *testing.T) {
 		})
 	}
 }
+
+func TestFirstDateOfPeriod(t *testing.T) {
+	tests := []struct {
+		name       string
+		epi        Epiweek
+		dayWanted  time.Weekday
+		dateWanted time.Time
+	}{
+		{
+			name:       "CDC Init with wednesday of week",
+			epi:        NewEpiweek(time.Date(2020, 10, 28, 0, 0, 0, 0, time.UTC)),
+			dayWanted:  time.Sunday,
+			dateWanted: time.Date(2020, 10, 25, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			name:       "CDC Init with Saturday of week",
+			epi:        NewEpiweek(time.Date(2020, 10, 31, 0, 0, 0, 0, time.UTC)),
+			dayWanted:  time.Sunday,
+			dateWanted: time.Date(2020, 10, 25, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			name:       "ISO init with Sunday of week",
+			epi:        NewIsoWeek(time.Date(2020, 11, 1, 0, 0, 0, 0, time.UTC)),
+			dayWanted:  time.Monday,
+			dateWanted: time.Date(2020, 10, 26, 0, 0, 0, 0, time.UTC),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			date := tt.epi.FirstDateOfPeriod()
+			if date != tt.dateWanted {
+				t.Errorf("Got: %s, wanted: %s", date.Local(), tt.dateWanted.Local())
+			}
+			day := date.Weekday()
+			if day != tt.dayWanted {
+				t.Errorf("Got: %s, wanted: %s", day, tt.dayWanted)
+			}
+		})
+	}
+}
