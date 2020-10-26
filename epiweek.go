@@ -44,6 +44,10 @@ func NewIsoWeek(t time.Time) (e Epiweek) {
 	var days time.Duration
 	days = time.Duration(myTime(t).daysFromDay(time.Thursday))
 
+	if days == 4 {
+		days = -3
+	}
+
 	e = Epiweek{
 		time: t.Add(days * time.Second * secondsInDay),
 		et:   isoweek,

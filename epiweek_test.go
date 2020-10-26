@@ -69,11 +69,11 @@ func TestNewIsoWeek(t *testing.T) {
 			},
 		},
 		{
-			name:    "Week start on Sunday, ISO Week",
+			name:    "Week ends on Sunday, ISO Week",
 			epiweek: NewIsoWeek(time.Date(2019, 12, 1, 0, 0, 0, 0, time.UTC)),
 			want: expected{
 				year: 2019,
-				week: 49,
+				week: 48,
 			},
 		},
 		{
@@ -194,13 +194,21 @@ func TestDaysFromDay(t *testing.T) {
 			epi:  myTime(time.Date(2020, 10, 21, 0, 0, 0, 0, time.UTC)),
 			want: -3,
 		},
+		{
+			name: "Sunday to Thursday",
+			day:  time.Thursday,
+			epi:  myTime(time.Date(2020, 10, 25, 0, 0, 0, 0, time.UTC)),
+			want: 4,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			days := tt.epi.daysFromDay(tt.day)
 			if days != tt.want {
-				t.Errorf("Wanted: %d, got: %d.\nCalculated from epi: %#v and day: %#v", tt.want, days, tt.epi, tt.day)
+				t.Errorf("Wanted: %d, got: %d.\nCalculated from epi: %#v\nFormatted: %s\nDay: %#v",
+					tt.want, days, tt.epi, time.Time(tt.epi).Local(), tt.day)
+
 			}
 		})
 	}
@@ -239,6 +247,67 @@ func TestEpiweekValueIsTheSame(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if reflect.DeepEqual(tt.e1, tt.e2) != tt.equal {
 				t.Errorf("Not same week.\ne1: %#v\ne2: %#v", tt.e1, tt.e2)
+			}
+		})
+	}
+}
+
+func TestNewIsoWeekValueIsTheSame(t *testing.T) {
+	tests := []struct {
+		name  string
+		e1    Epiweek
+		e2    Epiweek
+		equal bool
+	}{
+		{
+			name:  "Same week, Monday - Sunday",
+			e1:    NewIsoWeek(time.Date(2020, 10, 19, 0, 0, 0, 0, time.UTC)),
+			e2:    NewIsoWeek(time.Date(2020, 10, 25, 0, 0, 0, 0, time.UTC)),
+			equal: true,
+		},
+		{
+			name:  "Different week, Monday - Monday",
+			e1:    NewIsoWeek(time.Date(2020, 1, 6, 0, 0, 0, 0, time.UTC)),
+			e2:    NewIsoWeek(time.Date(2020, 1, 13, 0, 0, 0, 0, time.UTC)),
+			equal: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if reflect.DeepEqual(tt.e1, tt.e2) != tt.equal {
+				t.Errorf(
+					"Not same week.\ne1: %#v\ne2: %#v\ne1: %#q\ne2: %#q\ne1 day:%s\ne2 day:%s\nShould be equal: %v",
+					tt.e1, tt.e2,
+					tt.e1, tt.e2,
+					time.Time(tt.e1.time).Local(), time.Time(tt.e2.time).Local(),
+					tt.equal)
+			}
+		})
+	}
+}
+
+func TestInternalDayOfWeek(t *testing.T) {
+	tests := []struct {
+		name      string
+		epi       Epiweek
+		dayWanted time.Weekday
+	}{
+		{
+			name:      "CDC, Wednesday",
+			epi:       NewEpiweek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
+			dayWanted: time.Wednesday,
+		},
+		{
+			name:      "ISO, Thursday",
+			epi:       NewIsoWeek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
+			dayWanted: time.Thursday,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			day := time.Time(tt.epi.time).Weekday()
+			if day != tt.dayWanted {
+				t.Errorf("Days not the same: Got: %v, wanted %v", day, tt.dayWanted)
 			}
 		})
 	}
