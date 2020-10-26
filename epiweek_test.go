@@ -214,3 +214,32 @@ func TestString(t *testing.T) {
 		t.Errorf("String output does not match. Expected: %v, got: %s", expected, ep)
 	}
 }
+
+func TestEpiweekValueIsTheSame(t *testing.T) {
+	tests := []struct {
+		name  string
+		e1    Epiweek
+		e2    Epiweek
+		equal bool
+	}{
+		{
+			name:  "Same week, Sunday - Saturday",
+			e1:    NewEpiweek(time.Date(2020, 1, 5, 0, 0, 0, 0, time.UTC)),
+			e2:    NewEpiweek(time.Date(2020, 1, 11, 0, 0, 0, 0, time.UTC)),
+			equal: true,
+		},
+		{
+			name:  "Different week, Sunday - Sunday",
+			e1:    NewEpiweek(time.Date(2020, 1, 5, 0, 0, 0, 0, time.UTC)),
+			e2:    NewEpiweek(time.Date(2020, 1, 12, 0, 0, 0, 0, time.UTC)),
+			equal: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if reflect.DeepEqual(tt.e1, tt.e2) != tt.equal {
+				t.Errorf("Not same week.\ne1: %#v\ne2: %#v", tt.e1, tt.e2)
+			}
+		})
+	}
+}
