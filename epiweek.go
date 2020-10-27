@@ -30,6 +30,10 @@ func NewEpiweek(t time.Time) (e Epiweek) {
 	var days time.Duration
 	days = time.Duration(myTime(t).daysFromDay(time.Wednesday))
 
+	// Only want granularity of a day; discard hours, minutes, seconds from
+	// initialized value
+	t = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.UTC)
+
 	e = Epiweek{
 		time: t.Add(days * time.Second * secondsInDay),
 		et:   epiweek,
@@ -43,6 +47,10 @@ func NewEpiweek(t time.Time) (e Epiweek) {
 func NewIsoWeek(t time.Time) (e Epiweek) {
 	var days time.Duration
 	days = time.Duration(myTime(t).daysFromDay(time.Thursday))
+
+	// Only want granularity of a day; discard hours, minutes, seconds from
+	// initialized value
+	t = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.UTC)
 
 	if days == 4 {
 		days = -3

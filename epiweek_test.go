@@ -288,19 +288,34 @@ func TestNewIsoWeekValueIsTheSame(t *testing.T) {
 
 func TestInternalDayOfWeek(t *testing.T) {
 	tests := []struct {
-		name      string
-		epi       Epiweek
-		dayWanted time.Weekday
+		name       string
+		epi        Epiweek
+		dayWanted  time.Weekday
+		timeWanted time.Time
 	}{
 		{
-			name:      "CDC, Wednesday",
-			epi:       NewEpiweek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
-			dayWanted: time.Wednesday,
+			name:       "CDC, Wednesday",
+			epi:        NewEpiweek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
+			dayWanted:  time.Wednesday,
+			timeWanted: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 		},
 		{
-			name:      "ISO, Thursday",
-			epi:       NewIsoWeek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
-			dayWanted: time.Thursday,
+			name:       "ISO, Thursday",
+			epi:        NewIsoWeek(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)),
+			dayWanted:  time.Thursday,
+			timeWanted: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			name:       "ISO, test store only Year Month Day",
+			epi:        NewIsoWeek(time.Date(2020, 1, 1, 15, 30, 0, 0, time.UTC)),
+			dayWanted:  time.Thursday,
+			timeWanted: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			name:       "CDC, test store only Year Month Day",
+			epi:        NewEpiweek(time.Date(2020, 1, 1, 15, 30, 0, 0, time.UTC)),
+			dayWanted:  time.Wednesday,
+			timeWanted: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 		},
 	}
 	for _, tt := range tests {
@@ -308,6 +323,9 @@ func TestInternalDayOfWeek(t *testing.T) {
 			day := time.Time(tt.epi.time).Weekday()
 			if day != tt.dayWanted {
 				t.Errorf("Days not the same: Got: %v, wanted %v", day, tt.dayWanted)
+			}
+			if tt.epi.time != tt.timeWanted {
+				t.Errorf("Internally stored date wanted: %s, got: %s", tt.timeWanted, tt.epi.time)
 			}
 		})
 	}
